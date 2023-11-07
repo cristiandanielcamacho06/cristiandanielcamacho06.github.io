@@ -1,16 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Control de Letra</title>
+    <title>Control de LED</title>
 </head>
 <body>
-    <h1>Control de Letra</h1>
-    
-    <button id="enviarLetra">Enviar Letra</button>
+    <h1>Control de LED</h1>
+    <button id="enviar">Enviar Letra</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
 
     <script>
-        document.getElementById("enviarLetra").addEventListener("click", function() {
-            // Realiza una acción al presionar el botón (puede ser una llamada a una API o cualquier acción)
+        // Configura la conexión MQTT
+        var mqttBroker = "ws://mqtt.eclipse.org:80/ws"; // Cambia la dirección y puerto MQTT según tus necesidades
+        var mqttClient = new Paho.MQTT.Client(mqttBroker, "web_client_" + new Date().getTime());
+
+        // Función para manejar la conexión MQTT
+        mqttClient.onConnectionLost = function(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("Conexión MQTT perdida: " + responseObject.errorMessage);
+            }
+        };
+
+        // Conectar al servidor MQTT
+        mqttClient.connect({
+            onSuccess: function() {
+                console.log("Conexión MQTT exitosa");
+            },
+            useSSL: false
+        });
+
+        // Agregar un event listener al botón
+        document.getElementById('enviar').addEventListener('click', function() {
+            // Envía un mensaje MQTT desde la página web a través del servidor MQTT
+            var letra = "A"; // Cambia la letra que deseas enviar
+            mqttClient.send("led/control", letra);
         });
     </script>
 </body>
