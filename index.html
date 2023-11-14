@@ -33,7 +33,7 @@
         document.getElementById('enviar').addEventListener('click', function() {
             // Envía un mensaje MQTT desde la página web a través del servidor MQTT
             var letra = "A"; // Cambia la letra que deseas enviar
-            mqttClient.send("led/control", letra);
+            mqttClient.send("TOPICO RAIZ", letra);
         });
     </script>
 </body>
